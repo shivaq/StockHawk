@@ -1,10 +1,10 @@
-package com.udacity.stockhawk.data;
+package com.yasuaki.stockhawk.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.udacity.stockhawk.R;
+import com.yasuaki.stockhawk.R;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -18,23 +18,29 @@ public final class PrefUtils {
     public static Set<String> getStocks(Context context) {
         String stocksKey = context.getString(R.string.pref_stocks_key);
         String initializedKey = context.getString(R.string.pref_stocks_initialized_key);
-        String[] defaultStocksList = context.getResources().getStringArray(R.array.default_stocks);
-
-        HashSet<String> defaultStocks = new HashSet<>(Arrays.asList(defaultStocksList));
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
 
         boolean initialized = prefs.getBoolean(initializedKey, false);
 
+        //初getStocks かどうかチェック
         if (!initialized) {
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean(initializedKey, true);
+
+            //配列を取得
+            String[] defaultStocksList = context.getResources().getStringArray(R.array.default_stocks);
+            //配列を List にして、HashSet に格納
+            //HashSet →HashCode を利用してOBJを識別
+            HashSet<String> defaultStocks = new HashSet<>(Arrays.asList(defaultStocksList));
+            //HashSet を Set<String> として SharedPreferences に格納
+            //SET →重複を許さないCollection の インターフェイス
             editor.putStringSet(stocksKey, defaultStocks);
+
+            //初getStock の場合、ここで initialized のキーを true にしておく
+            editor.putBoolean(initializedKey, true);
             editor.apply();
             return defaultStocks;
         }
         return prefs.getStringSet(stocksKey, new HashSet<String>());
-
     }
 
     private static void editStockPref(Context context, String symbol, Boolean add) {
@@ -84,7 +90,6 @@ public final class PrefUtils {
         } else {
             editor.putString(key, absoluteKey);
         }
-
         editor.apply();
     }
 

@@ -1,4 +1,4 @@
-package com.udacity.stockhawk.ui;
+package com.yasuaki.stockhawk.ui;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -19,10 +19,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.udacity.stockhawk.R;
-import com.udacity.stockhawk.data.Contract;
-import com.udacity.stockhawk.data.PrefUtils;
-import com.udacity.stockhawk.sync.QuoteSyncJob;
+import com.yasuaki.stockhawk.R;
+import com.yasuaki.stockhawk.data.Contract;
+import com.yasuaki.stockhawk.data.PrefUtils;
+import com.yasuaki.stockhawk.sync.QuoteSyncJob;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
             }
         }).attachToRecyclerView(stockRecyclerView);
-
-
     }
 
     private boolean networkUp() {
@@ -91,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
+    /**
+     * sync data, check network status and if there were stocks to fetch data
+     */
     @Override
     public void onRefresh() {
 
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         new AddStockDialog().show(getFragmentManager(), "StockDialogFragment");
     }
 
+    //TODO:Check nonExisted symbol query
     void addStock(String symbol) {
         if (symbol != null && !symbol.isEmpty()) {
 
@@ -133,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Timber.d("Loader id is %s args is %s", id, args);
         return new CursorLoader(this,
                 Contract.Quote.URI,
                 Contract.Quote.QUOTE_COLUMNS.toArray(new String[]{}),
@@ -142,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         swipeRefreshLayout.setRefreshing(false);
+        Timber.d("Cursor is %s", data);
 
         if (data.getCount() != 0) {
             error.setVisibility(View.GONE);

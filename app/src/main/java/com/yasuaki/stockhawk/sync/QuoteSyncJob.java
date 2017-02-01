@@ -1,4 +1,4 @@
-package com.udacity.stockhawk.sync;
+package com.yasuaki.stockhawk.sync;
 
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -9,8 +9,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.udacity.stockhawk.data.Contract;
-import com.udacity.stockhawk.data.PrefUtils;
+import com.yasuaki.stockhawk.data.Contract;
+import com.yasuaki.stockhawk.data.PrefUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,42 +40,51 @@ public final class QuoteSyncJob {
     private QuoteSyncJob() {
     }
 
+    /**
+     * Get quotes with sharedPreferenced symbol from yahoo finance API.
+     * This is called from QuoteIntentService in background thread
+     *
+     * @param context
+     */
     static void getQuotes(Context context) {
 
         Timber.d("Running sync job");
 
+        //Start and end day for quotes to retrieve
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
         from.add(Calendar.YEAR, -YEARS_OF_HISTORY);
 
         try {
-
+            //Get stock symbols from sharedPreferences
             Set<String> stockPref = PrefUtils.getStocks(context);
             Set<String> stockCopy = new HashSet<>();
             stockCopy.addAll(stockPref);
             String[] stockArray = stockPref.toArray(new String[stockPref.size()]);
 
-            Timber.d(stockCopy.toString());
 
             if (stockArray.length == 0) {
                 return;
             }
 
+            //Query Stock data from YahooFinance api.
+            // Returned map only includes the Stocks
+            // that successfully be retrieved from Yahoo Finance.
             Map<String, Stock> quotes = YahooFinance.get(stockArray);
             Iterator<String> iterator = stockCopy.iterator();
 
-            Timber.d(quotes.toString());
+            ArrayList<ContentValues> contentValuesArrayList = new ArrayList<>();
 
-            ArrayList<ContentValues> quoteCVs = new ArrayList<>();
-
+            //Iterate stock data
             while (iterator.hasNext()) {
                 String symbol = iterator.next();
 
-
+                //Get stock with symbol as a key
                 Stock stock = quotes.get(symbol);
                 StockQuote quote = stock.getQuote();
 
                 float price = quote.getPrice().floatValue();
+                //Get difference between current price and previous closing price
                 float change = quote.getChange().floatValue();
                 float percentChange = quote.getChangeInPercent().floatValue();
 
@@ -85,6 +94,7 @@ public final class QuoteSyncJob {
 
                 StringBuilder historyBuilder = new StringBuilder();
 
+                //Retrieve date and closing price
                 for (HistoricalQuote it : history) {
                     historyBuilder.append(it.getDate().getTimeInMillis());
                     historyBuilder.append(", ");
@@ -98,18 +108,19 @@ public final class QuoteSyncJob {
                 quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
                 quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
 
+                Timber.d("History data of %s is %s", symbol, historyBuilder.toString());
 
                 quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
-
-                quoteCVs.add(quoteCV);
-
+                contentValuesArrayList.add(quoteCV);
             }
 
+            //Insert stock data
             context.getContentResolver()
                     .bulkInsert(
                             Contract.Quote.URI,
-                            quoteCVs.toArray(new ContentValues[quoteCVs.size()]));
+                            contentValuesArrayList.toArray(new ContentValues[contentValuesArrayList.size()]));
 
+            //Broadcast updated quotes
             Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
             context.sendBroadcast(dataUpdatedIntent);
 
@@ -118,19 +129,20 @@ public final class QuoteSyncJob {
         }
     }
 
+    /**
+     * Set job schedule for QuoteJobService.class
+     */
     private static void schedulePeriodic(Context context) {
         Timber.d("Scheduling a periodic task");
 
 
-        JobInfo.Builder builder = new JobInfo.Builder(PERIODIC_ID, new ComponentName(context, QuoteJobService.class));
-
-
+        JobInfo.Builder builder = new JobInfo.Builder(
+                PERIODIC_ID, new ComponentName(context, QuoteJobService.class));
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPeriodic(PERIOD)
                 .setBackoffCriteria(INITIAL_BACKOFF, JobInfo.BACKOFF_POLICY_EXPONENTIAL);
-
-
-        JobScheduler scheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        JobScheduler scheduler =
+                (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
 
         scheduler.schedule(builder.build());
     }
@@ -143,8 +155,14 @@ public final class QuoteSyncJob {
 
     }
 
+    /**
+     * If network is ok, startService. If network is not ok, try one time job.
+     *
+     * @param context
+     */
     public static synchronized void syncImmediately(Context context) {
 
+        //If network is ok, startService
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
@@ -152,21 +170,14 @@ public final class QuoteSyncJob {
             Intent nowIntent = new Intent(context, QuoteIntentService.class);
             context.startService(nowIntent);
         } else {
-
-            JobInfo.Builder builder = new JobInfo.Builder(ONE_OFF_ID, new ComponentName(context, QuoteJobService.class));
-
+            //ONE_OFF_ID: ID for one time job
+            JobInfo.Builder builder = new JobInfo.Builder(
+                    ONE_OFF_ID, new ComponentName(context, QuoteJobService.class));
 
             builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                     .setBackoffCriteria(INITIAL_BACKOFF, JobInfo.BACKOFF_POLICY_EXPONENTIAL);
-
-
             JobScheduler scheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-
             scheduler.schedule(builder.build());
-
-
         }
     }
-
-
 }
