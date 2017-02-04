@@ -1,6 +1,7 @@
 package com.yasuaki.stockhawk.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -63,9 +64,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onClick(String symbol) {
-        Timber.d("Symbol clicked: %s", symbol);
+        startActivity(getStartIntent(getActivity(), symbol));
     }
-
 
     @Nullable
     @Override
@@ -213,5 +213,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Intent getStartIntent(Context context, String symbol){
+        Intent intent = new Intent(context, GraphActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, symbol);
+        return intent;
     }
 }

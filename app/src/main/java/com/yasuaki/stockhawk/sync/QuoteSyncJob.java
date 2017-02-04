@@ -73,6 +73,7 @@ public final class QuoteSyncJob {
             Map<String, Stock> quotes = YahooFinance.get(stockArray);
             Iterator<String> iterator = stockCopy.iterator();
 
+
             ArrayList<ContentValues> contentValuesArrayList = new ArrayList<>();
 
             //Iterate stock data
@@ -81,6 +82,7 @@ public final class QuoteSyncJob {
 
                 //Get stock with symbol as a key
                 Stock stock = quotes.get(symbol);
+                Timber.d("Stock obj is %s", stock.toString());
                 StockQuote quote = stock.getQuote();
 
                 float price = quote.getPrice().floatValue();

@@ -51,7 +51,8 @@ check {
 
 dependencies {
     final STETHO_VERSION = '1.4.2'
-
+    final PICASSO_VERSION = '2.5.2'
+    
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.1.0'
@@ -66,4 +67,5 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile "com.facebook.stetho:stetho:$STETHO_VERSION"
     compile "com.facebook.stetho:stetho-okhttp3:$STETHO_VERSION"
+    compile "com.squareup.picasso:picasso:$PICASSO_VERSION"
 }

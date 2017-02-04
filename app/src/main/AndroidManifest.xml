@@ -23,6 +23,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.GraphActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yasuaki.stockhawk.ui.MainActivity"/>
+        </activity>
+
         <service
             android:name="com.yasuaki.stockhawk.sync.QuoteIntentService"
             android:exported="false" />
