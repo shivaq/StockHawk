@@ -25,12 +25,14 @@ public class GraphFragment extends Fragment {
     private final String ONE_MONTH = "1m";
     private final String SIX_MONTH = "6m";
 
-    @BindView(R.id.stock_history_graph)
+    @BindView(R.id.image_one_day_graph)
     ImageView quoteGraph;
-    @BindView(R.id.stock_five_day_graph)
+    @BindView(R.id.image_five_day_graph)
     ImageView fiveDayGraph;
-
-    //TODO:Uri を生成して、Picasso で利用するためのロジック
+    @BindView(R.id.image_one_month_graph)
+    ImageView oneMonthGraph;
+    @BindView(R.id.image_five_six_month)
+    ImageView sixMonthGraph;
 
     public GraphFragment() {
     }
@@ -50,15 +52,20 @@ public class GraphFragment extends Fragment {
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
             String symbol = intent.getStringExtra(Intent.EXTRA_TEXT);
 
+            String eps =
+
+
+
             Uri oneDayGraphUri = Utilily.buildUri(symbol, ONE_DAY);
             Uri fiveDayGraphUri = Utilily.buildUri(symbol, FIVE_DAY);
+            Uri oneMonthGraphUri = Utilily.buildUri(symbol, ONE_MONTH);
+            Uri sixMonthGraphUri = Utilily.buildUri(symbol, SIX_MONTH);
 
             Picasso.with(getContext()).load(oneDayGraphUri).into(quoteGraph);
             Picasso.with(getContext()).load(fiveDayGraphUri).into(fiveDayGraph);
+            Picasso.with(getContext()).load(oneMonthGraphUri).into(oneMonthGraph);
+            Picasso.with(getContext()).load(sixMonthGraphUri).into(sixMonthGraph);
         }
-
-        //TODO:Intent で飛んできて、シンボルを取得し、それをもってグラフを取得
-
 
         setHasOptionsMenu(true);
         return rootView;

@@ -52,7 +52,9 @@ check {
 dependencies {
     final STETHO_VERSION = '1.4.2'
     final PICASSO_VERSION = '2.5.2'
-    
+    final CONSTRAINT_LAYOUT_VERSION = '1.0.0-beta4'
+
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.1.0'
@@ -68,4 +70,5 @@ dependencies {
     compile "com.facebook.stetho:stetho:$STETHO_VERSION"
     compile "com.facebook.stetho:stetho-okhttp3:$STETHO_VERSION"
     compile "com.squareup.picasso:picasso:$PICASSO_VERSION"
+    compile "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
 }

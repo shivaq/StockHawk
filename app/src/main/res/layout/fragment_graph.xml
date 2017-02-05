@@ -1,19 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
 
-    <ImageView
-        android:id="@+id/stock_history_graph"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/stock_graph"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"/>
+        android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/stock_five_day_graph"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:visibility="visible"/>
-</LinearLayout>
+
+        <TextView
+            android:id="@+id/text_detail_info"
+            android:layout_width="match_parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/text_label_one_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:paddingLeft="8dp"
+            android:text="1day"
+            android:textColor="@android:color/black"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@+id/text_detail_info"
+            app:layout_constraintRight_toRightOf="@+id/text_detail_info"
+            app:layout_constraintTop_toTopOf="@+id/text_detail_info"/>
+
+        <ImageView
+            android:id="@+id/image_one_day_graph"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@+id/text_label_one_day"
+            app:layout_constraintRight_toRightOf="@+id/text_label_one_day"
+            app:layout_constraintTop_toBottomOf="@+id/text_label_one_day"
+            tools:src="@drawable/rectangle"/>
+
+        <TextView
+            android:id="@+id/text_label_five_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:paddingLeft="8dp"
+            android:text="5day"
+            android:textColor="@android:color/black"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@+id/image_one_day_graph"
+            app:layout_constraintRight_toRightOf="@+id/image_one_day_graph"
+            app:layout_constraintTop_toBottomOf="@+id/image_one_day_graph"/>
+
+        <ImageView
+            android:id="@+id/image_five_day_graph"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@+id/text_label_five_day"
+            app:layout_constraintRight_toRightOf="@+id/text_label_five_day"
+            app:layout_constraintTop_toBottomOf="@+id/text_label_five_day"
+            tools:src="@drawable/rectangle"/>
+
+        <TextView
+            android:id="@+id/text_label_one_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:paddingLeft="8dp"
+            android:text="1month"
+            android:textColor="@android:color/black"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@+id/image_five_day_graph"
+            app:layout_constraintRight_toRightOf="@+id/image_five_day_graph"
+            app:layout_constraintTop_toBottomOf="@+id/image_five_day_graph"/>
+
+        <ImageView
+            android:id="@+id/image_one_month_graph"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@+id/text_label_one_month"
+            app:layout_constraintRight_toRightOf="@+id/text_label_one_month"
+            app:layout_constraintTop_toBottomOf="@+id/text_label_one_month"
+            tools:src="@drawable/rectangle"/>
+
+        <TextView
+            android:id="@+id/text_label_six_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:paddingLeft="8dp"
+            android:text="6month"
+            android:textColor="@android:color/black"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@+id/image_one_month_graph"
+            app:layout_constraintRight_toRightOf="@+id/image_one_month_graph"
+            app:layout_constraintTop_toBottomOf="@+id/image_one_month_graph"/>
+
+        <ImageView
+            android:id="@+id/image_five_six_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:visibility="visible"
+            app:layout_constraintLeft_toLeftOf="@+id/text_label_six_month"
+            app:layout_constraintRight_toRightOf="@+id/text_label_six_month"
+            app:layout_constraintTop_toBottomOf="@+id/text_label_six_month"
+            tools:src="@drawable/rectangle"/>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
