@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.yasuaki.stockhawk.R;
-import com.yasuaki.stockhawk.Utilily;
+import com.yasuaki.stockhawk.Utility;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity  {
         //If fragment reference is null, Create and inflate new fragment instance
         if (mainFragment == null) {
             mainFragment = MainFragment.newInstance();
-            Utilily.addFragmentToActivity(
+            Utility.addFragmentToActivity(
                     getSupportFragmentManager(),
                     mainFragment,
                     R.id.main_fragment_container);

@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.yasuaki.stockhawk.R;
-import com.yasuaki.stockhawk.Utilily;
+import com.yasuaki.stockhawk.Utility;
 
 public class GraphActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class GraphActivity extends AppCompatActivity {
 
         if (graphFragment == null) {
             graphFragment = GraphFragment.newInstance();
-            Utilily.addFragmentToActivity(
+            Utility.addFragmentToActivity(
                     getSupportFragmentManager(),
                     graphFragment,
                     R.id.graph_fragment_container);

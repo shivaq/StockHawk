@@ -22,20 +22,13 @@ public final class PrefUtils {
 
         boolean initialized = prefs.getBoolean(initializedKey, false);
 
-        //初getStocks かどうかチェック
         if (!initialized) {
             SharedPreferences.Editor editor = prefs.edit();
 
-            //配列を取得
             String[] defaultStocksList = context.getResources().getStringArray(R.array.default_stocks);
-            //配列を List にして、HashSet に格納
-            //HashSet →HashCode を利用してOBJを識別
             HashSet<String> defaultStocks = new HashSet<>(Arrays.asList(defaultStocksList));
-            //HashSet を Set<String> として SharedPreferences に格納
-            //SET →重複を許さないCollection の インターフェイス
             editor.putStringSet(stocksKey, defaultStocks);
 
-            //初getStock の場合、ここで initialized のキーを true にしておく
             editor.putBoolean(initializedKey, true);
             editor.apply();
             return defaultStocks;

@@ -1,11 +1,14 @@
 package com.yasuaki.stockhawk;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-public class Utilily {
+public class Utility {
 
     private static final String BASE_URI = "http://chart.finance.yahoo.com";
 
@@ -28,5 +31,15 @@ public class Utilily {
                 .appendQueryParameter("z", "s")
                 .appendQueryParameter("p", "m50, m200")
                 .build();
+    }
+
+    /**
+     * Check network status
+     */
+    public static boolean networkUp(Context context){
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 }

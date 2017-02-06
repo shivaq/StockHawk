@@ -3,8 +3,6 @@ package com.yasuaki.stockhawk.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yasuaki.stockhawk.R;
+import com.yasuaki.stockhawk.Utility;
 import com.yasuaki.stockhawk.data.Contract;
 import com.yasuaki.stockhawk.data.PrefUtils;
 import com.yasuaki.stockhawk.sync.QuoteSyncJob;
@@ -41,6 +40,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
 
     private static final int STOCK_LOADER = 0;
+    private static final String STOCK_INFO_KEY = "key_info";
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
     RecyclerView stockRecyclerView;
@@ -100,17 +100,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             }
         }).attachToRecyclerView(stockRecyclerView);
 
-
         setHasOptionsMenu(true);
         return rootView;
-    }
-
-
-    private boolean networkUp() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
     /**
@@ -121,11 +112,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         QuoteSyncJob.syncImmediately(getActivity());
 
-        if (!networkUp() && adapter.getItemCount() == 0) {
+        if (!Utility.networkUp(getContext()) && adapter.getItemCount() == 0) {
             swipeRefreshLayout.setRefreshing(false);
             error.setText(getString(R.string.error_no_network));
             error.setVisibility(View.VISIBLE);
-        } else if (!networkUp()) {
+        } else if (!Utility.networkUp(getContext())) {
             swipeRefreshLayout.setRefreshing(false);
             Toast.makeText(getActivity(), R.string.toast_no_connectivity, Toast.LENGTH_LONG).show();
         } else if (PrefUtils.getStocks(getActivity()).size() == 0) {
@@ -146,7 +137,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     void addStock(String symbol) {
         if (symbol != null && !symbol.isEmpty()) {
 
-            if (networkUp()) {
+            if (Utility.networkUp(getContext())) {
                 swipeRefreshLayout.setRefreshing(true);
             } else {
                 String message = getString(R.string.toast_stock_added_no_connectivity, symbol);

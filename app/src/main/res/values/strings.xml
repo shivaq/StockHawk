@@ -26,10 +26,14 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_add">Add</string>
 
-    <string name="error_no_network">No network connectivity! Will load stock cursor when the network is available.</string>
-    <string name="error_no_stocks">No stocks added! Hit the floating action button to add one.</string>
-
     <string name="toast_stock_added_no_connectivity">Symbol %s added. Will refresh when network available.</string>
     <string name="toast_no_connectivity">Will refresh when network available.</string>
 
+    <!-- Error Stock Database -->
+    <string name="error_unknown">No stock information available</string>
+    <string name="error_no_stocks">No stocks added! \n\nHit the floating action button to add one.</string>
+    <string name="error_no_network">No network connectivity! \n\nWill load stock cursor when the network is available.</string>
+    <string name="error_server_down">No stock information available. \n\nThe server is not returning data.</string>
+    <string name="error_invalid_request">No stock information available. \n\nThe server is not returning valid data. \n\nPlease check for an updated version of application.</string>
+    <string name="error_invalid_symbol_request">No stock information available. The request symbol doesn\'t exist.</string>
 </resources>

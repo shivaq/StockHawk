@@ -27,6 +27,7 @@ import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
 import yahoofinance.quotes.stock.StockQuote;
+import yahoofinance.quotes.stock.StockStats;
 
 public final class QuoteSyncJob {
 
@@ -73,7 +74,6 @@ public final class QuoteSyncJob {
             Map<String, Stock> quotes = YahooFinance.get(stockArray);
             Iterator<String> iterator = stockCopy.iterator();
 
-
             ArrayList<ContentValues> contentValuesArrayList = new ArrayList<>();
 
             //Iterate stock data
@@ -82,13 +82,26 @@ public final class QuoteSyncJob {
 
                 //Get stock with symbol as a key
                 Stock stock = quotes.get(symbol);
-                Timber.d("Stock obj is %s", stock.toString());
                 StockQuote quote = stock.getQuote();
 
                 float price = quote.getPrice().floatValue();
                 //Get difference between current price and previous closing price
                 float change = quote.getChange().floatValue();
                 float percentChange = quote.getChangeInPercent().floatValue();
+
+
+                float dayHigh = quote.getDayHigh().floatValue();
+                float dayLow = quote.getDayLow().floatValue();
+                float yearHigh = quote.getYearHigh().floatValue();
+                float yearLow = quote.getYearLow().floatValue();
+
+                StockStats stats = stock.getStats();
+                float eps = stats.getEps().floatValue();
+                float roe = stats.getROE().floatValue();
+
+                Timber.d("QuoteSyncJob:getQuotes: %s, %s, %s, %s, %s, %s",
+                        dayHigh, dayLow, yearHigh, yearLow, eps, roe);
+
 
                 // WARNING! Don't request historical data for a stock that doesn't exist!
                 // The request will hang forever X_x
@@ -109,7 +122,12 @@ public final class QuoteSyncJob {
                 quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
                 quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
                 quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
-
+                quoteCV.put(Contract.Quote.COLUMN_DAY_HIGH, dayHigh);
+                quoteCV.put(Contract.Quote.COLUMN_DAY_LOW, dayLow);
+                quoteCV.put(Contract.Quote.COLUMN_YEAR_HIGH, yearHigh);
+                quoteCV.put(Contract.Quote.COLUMN_YEAR_LOW, yearLow);
+                quoteCV.put(Contract.Quote.COLUMN_EPS, eps);
+                quoteCV.put(Contract.Quote.COLUMN_ROE, roe);
                 Timber.d("History data of %s is %s", symbol, historyBuilder.toString());
 
                 quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
@@ -165,6 +183,7 @@ public final class QuoteSyncJob {
     public static synchronized void syncImmediately(Context context) {
 
         //If network is ok, startService
+        //todo:use utility method
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
