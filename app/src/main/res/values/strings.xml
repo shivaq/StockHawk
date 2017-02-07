@@ -43,4 +43,5 @@
     <string name="error_server_down">No stock information available. \n\nThe server is not returning data.</string>
     <string name="error_invalid_request">No stock information available. \n\nThe server is not returning valid data. \n\nPlease check for an updated version of application.</string>
     <string name="error_invalid_symbol_request">No stock information available. The request symbol doesn\'t exist.</string>
+    <string name="title_widget">Stock Now</string>
 </resources>
