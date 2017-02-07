@@ -16,6 +16,13 @@
     <string name="default_stocks_apple">AAPL</string>
     <string name="default_stocks_microsoft">MSFT</string>
     <string name="default_stocks_facebook">FB</string>
+    <string name="default_stocks_AMD">AMD</string>
+    <string name="default_stocks_PIP">PIP</string>
+    <string name="default_stocks_BAC">BAC</string>
+    <string name="default_stocks_DRYS">DRYS</string>
+    <string name="default_stocks_GM">GM</string>
+    <string name="default_stocks_RGSE">RGSE</string>
+    <string name="default_stocks_XGTIW">XGTIW</string>
 
 
     <string name="action_change_units">@string/pref_display_mode_key</string>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -40,7 +41,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
 
     private static final int STOCK_LOADER = 0;
-    private static final String STOCK_INFO_KEY = "key_info";
+    private static final String LAYOUT_STATE_KEY = "com.yasuaki.stockhawk.ui.LAYOUT_STATE";
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
     RecyclerView stockRecyclerView;
@@ -53,7 +54,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @BindView(R.id.fab)
     FloatingActionButton addFab;
 
-    private StockAdapter adapter;
+    private StockAdapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private Parcelable mLayoutState;
 
     public MainFragment() {
     }
@@ -75,9 +78,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
 
-        adapter = new StockAdapter(getActivity(), this);
-        stockRecyclerView.setAdapter(adapter);
-        stockRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter = new StockAdapter(getActivity(), this);
+        stockRecyclerView.setAdapter(mAdapter);
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        stockRecyclerView.setLayoutManager(mLayoutManager);
 
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setRefreshing(true);
@@ -85,7 +90,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         QuoteSyncJob.initialize(getActivity());
         getActivity().getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
-
+        Timber.d("MainFragment:onCreateView: ");
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -94,7 +99,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                String symbol = adapter.getSymbolAtPosition(viewHolder.getAdapterPosition());
+                String symbol = mAdapter.getSymbolAtPosition(viewHolder.getAdapterPosition());
                 PrefUtils.removeStock(getActivity(), symbol);
                 getActivity().getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
             }
@@ -104,6 +109,19 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         return rootView;
     }
 
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //レイアウトの状態を Parcelable にして保存
+        mLayoutState = mLayoutManager.onSaveInstanceState();
+        //上記Parcelable を Bundle を使用して保存
+        outState.putParcelable(LAYOUT_STATE_KEY, mLayoutState);
+    }
+
+
     /**
      * sync data, check network status and if there were stocks to fetch data
      */
@@ -112,7 +130,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         QuoteSyncJob.syncImmediately(getActivity());
 
-        if (!Utility.networkUp(getContext()) && adapter.getItemCount() == 0) {
+        if (!Utility.networkUp(getContext()) && mAdapter.getItemCount() == 0) {
             swipeRefreshLayout.setRefreshing(false);
             error.setText(getString(R.string.error_no_network));
             error.setVisibility(View.VISIBLE);
@@ -166,14 +184,16 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         if (data.getCount() != 0) {
             error.setVisibility(View.GONE);
         }
-        adapter.setCursor(data);
+        mAdapter.setCursor(data);
+
+        mLayoutManager.onRestoreInstanceState(mLayoutState);
     }
 
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         swipeRefreshLayout.setRefreshing(false);
-        adapter.setCursor(null);
+        mAdapter.setCursor(null);
     }
 
 
@@ -200,7 +220,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         if (id == R.id.action_change_units) {
             PrefUtils.toggleDisplayMode(getActivity());
             setDisplayModeMenuItemIcon(item);
-            adapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);

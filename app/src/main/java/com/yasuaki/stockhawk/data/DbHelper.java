@@ -11,7 +11,7 @@ class DbHelper extends SQLiteOpenHelper {
 
 
     private static final String NAME = "StockHawk.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
 
     DbHelper(Context context) {
@@ -26,7 +26,8 @@ class DbHelper extends SQLiteOpenHelper {
                 + Quote.COLUMN_PRICE + " REAL NOT NULL, "
                 + Quote.COLUMN_ABSOLUTE_CHANGE + " REAL NOT NULL, "
                 + Quote.COLUMN_PERCENTAGE_CHANGE + " REAL NOT NULL, "
-                + Quote.COLUMN_HISTORY + " TEXT NOT NULL, "
+                + Quote.COLUMN_HISTORY_DATE + " TEXT NOT NULL, "
+                + Quote.COLUMN_HISTORY_CLOSING_PRICE + " TEXT NOT NULL, "
                 + Quote.COLUMN_DAY_HIGH + " REAL NOT NULL, "
                 + Quote.COLUMN_DAY_LOW + " REAL NOT NULL, "
                 + Quote.COLUMN_YEAR_HIGH + " REAL NOT NULL, "

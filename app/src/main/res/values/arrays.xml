@@ -5,5 +5,12 @@
         <item>@string/default_stocks_yahoo</item>
         <item>@string/default_stocks_microsoft</item>
         <item>@string/default_stocks_facebook</item>
+        <item>@string/default_stocks_AMD</item>
+        <item>@string/default_stocks_PIP</item>
+        <item>@string/default_stocks_BAC</item>
+        <item>@string/default_stocks_DRYS</item>
+        <item>@string/default_stocks_GM</item>
+        <item>@string/default_stocks_RGSE</item>
+        <item>@string/default_stocks_XGTIW</item>
     </string-array>
 </resources>

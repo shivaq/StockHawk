@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -29,6 +30,7 @@ import timber.log.Timber;
 public class GraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int STOCK_LOADER = 0;
+    private static final String SCROLL_POSITION_KEY = "com.yasuaki.stockhawk.ui.SCROLL_POSITION_KEY";
 
     @BindView(R.id.text_label_one_day)
     TextView tvOneDay;
@@ -38,7 +40,8 @@ public class GraphFragment extends Fragment implements LoaderManager.LoaderCallb
     TextView tvOneMonth;
     @BindView(R.id.text_label_six_month)
     TextView tvSixMonth;
-
+    @BindView(R.id.scroll_graph)
+    ScrollView scrollView;
     @BindView(R.id.image_one_day_graph)
     ImageView quoteGraph;
     @BindView(R.id.image_five_day_graph)
@@ -65,6 +68,10 @@ public class GraphFragment extends Fragment implements LoaderManager.LoaderCallb
     TextView tvError;
     @BindView(R.id.loading_spinner)
     ProgressBar progressBar;
+    @BindView(R.id.text_history_date)
+    TextView tvHistoryDate;
+    @BindView(R.id.text_history_price)
+    TextView tvHistoryPrice;
 
     private String mSymbol;
 
@@ -128,8 +135,32 @@ public class GraphFragment extends Fragment implements LoaderManager.LoaderCallb
         } else {
             showErrorView(getString(R.string.error_no_network));
         }
+
+        if(savedInstanceState != null && savedInstanceState.containsKey(SCROLL_POSITION_KEY)){
+            scrollPosition = savedInstanceState.getInt(SCROLL_POSITION_KEY);
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.smoothScrollTo(scrollPosition, scrollPosition);
+                }
+            });
+        }
+
         setHasOptionsMenu(true);
         return rootView;
+    }
+
+
+
+    private int scrollPosition;
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        scrollPosition = scrollView.getScrollY();
+        outState.putInt(SCROLL_POSITION_KEY, scrollPosition);
     }
 
     @Override
@@ -165,6 +196,8 @@ public class GraphFragment extends Fragment implements LoaderManager.LoaderCallb
             float yearHigh = data.getFloat((Contract.Quote.POSITION_YEAR_HIGH));
             float eps = data.getFloat((Contract.Quote.POSITION_EPS));
             float roe = data.getFloat((Contract.Quote.POSITION_ROE));
+            String historyDate = data.getString((Contract.Quote.POSITION_HISTORY_DATE));
+            String historyPrice = data.getString((Contract.Quote.POSITION_HISTORY_CLOSING_PRICE));
 
             String strDayLow = "Day-Low : " + dayLow;
             String strDayHigh = "Day-High : " + dayHigh;
@@ -179,6 +212,8 @@ public class GraphFragment extends Fragment implements LoaderManager.LoaderCallb
             tvYearHigh.setText(strYearHigh);
             tvEps.setText(strEps);
             tvRoe.setText(strRoe);
+            tvHistoryDate.setText(historyDate);
+            tvHistoryPrice.setText(historyPrice);
         }
     }
 

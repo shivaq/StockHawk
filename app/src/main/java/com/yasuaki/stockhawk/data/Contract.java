@@ -24,7 +24,8 @@ public final class Contract {
         public static final String COLUMN_PRICE = "price";
         public static final String COLUMN_ABSOLUTE_CHANGE = "absolute_change";
         public static final String COLUMN_PERCENTAGE_CHANGE = "percentage_change";
-        public static final String COLUMN_HISTORY = "history";
+        public static final String COLUMN_HISTORY_DATE = "history_date";
+        public static final String COLUMN_HISTORY_CLOSING_PRICE = "history_closing_price";
         public static final String COLUMN_DAY_HIGH = "day_high";
         public static final String COLUMN_DAY_LOW = "day_low";
         public static final String COLUMN_YEAR_HIGH = "year_high";
@@ -37,13 +38,14 @@ public final class Contract {
         public static final int POSITION_PRICE = 2;
         public static final int POSITION_ABSOLUTE_CHANGE = 3;
         public static final int POSITION_PERCENTAGE_CHANGE = 4;
-        public static final int POSITION_HISTORY = 5;
-        public static final int POSITION_DAY_HIGH = 6;
-        public static final int POSITION_DAY_LOW = 7;
-        public static final int POSITION_YEAR_HIGH = 8;
-        public static final int POSITION_YEAR_LOW = 9;
-        public static final int POSITION_EPS = 10;
-        public static final int POSITION_ROE = 11;
+        public static final int POSITION_HISTORY_DATE = 5;
+        public static final int POSITION_HISTORY_CLOSING_PRICE = 6;
+        public static final int POSITION_DAY_HIGH = 7;
+        public static final int POSITION_DAY_LOW = 8;
+        public static final int POSITION_YEAR_HIGH = 9;
+        public static final int POSITION_YEAR_LOW = 10;
+        public static final int POSITION_EPS = 11;
+        public static final int POSITION_ROE = 12;
 
         public static final ImmutableList<String> QUOTE_COLUMNS = ImmutableList.of(
                 _ID,
@@ -51,7 +53,8 @@ public final class Contract {
                 COLUMN_PRICE,
                 COLUMN_ABSOLUTE_CHANGE,
                 COLUMN_PERCENTAGE_CHANGE,
-                COLUMN_HISTORY,
+                COLUMN_HISTORY_DATE,
+                COLUMN_HISTORY_CLOSING_PRICE,
                 COLUMN_DAY_HIGH,
                 COLUMN_DAY_LOW,
                 COLUMN_YEAR_HIGH,

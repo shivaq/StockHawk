@@ -6,18 +6,22 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.text.format.DateFormat;
 
+import com.yasuaki.stockhawk.Utility;
 import com.yasuaki.stockhawk.data.Contract;
 import com.yasuaki.stockhawk.data.PrefUtils;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,6 +41,8 @@ public final class QuoteSyncJob {
     private static final int INITIAL_BACKOFF = 10000;
     private static final int PERIODIC_ID = 1;
     private static final int YEARS_OF_HISTORY = 2;
+    private static final DecimalFormat dollarFormat =
+            (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
 
     private QuoteSyncJob() {
     }
@@ -47,8 +53,9 @@ public final class QuoteSyncJob {
      *
      * @param context
      */
-    static void getQuotes(Context context) {
+    static String getQuotes(Context context) {
 
+        String invalidSymbol = null;
         Timber.d("Running sync job");
 
         //Start and end day for quotes to retrieve
@@ -62,10 +69,11 @@ public final class QuoteSyncJob {
             Set<String> stockCopy = new HashSet<>();
             stockCopy.addAll(stockPref);
             String[] stockArray = stockPref.toArray(new String[stockPref.size()]);
+            Timber.d("QuoteSyncJob:getQuotes: stock[0] is %s ", stockArray[0]);
 
 
             if (stockArray.length == 0) {
-                return;
+                return invalidSymbol;
             }
 
             //Query Stock data from YahooFinance api.
@@ -83,55 +91,71 @@ public final class QuoteSyncJob {
                 //Get stock with symbol as a key
                 Stock stock = quotes.get(symbol);
                 StockQuote quote = stock.getQuote();
+                //Check if the symbol is valid
+                if (quote.getPrice() == null) {
+                    invalidSymbol = symbol;
+                    Timber.d("QuoteSyncJob:getQuotes: the symbol %s is invalid", invalidSymbol);
+                    //Remove invalid symbol from SharedPreferences
+                    PrefUtils.removeStock(context, invalidSymbol);
+                } else {
+                    float price = quote.getPrice().floatValue();
+                    //Get difference between current price and previous closing price
+                    float change = quote.getChange().floatValue();
+                    float percentChange = quote.getChangeInPercent().floatValue();
 
-                float price = quote.getPrice().floatValue();
-                //Get difference between current price and previous closing price
-                float change = quote.getChange().floatValue();
-                float percentChange = quote.getChangeInPercent().floatValue();
+                    float dayHigh = quote.getDayHigh().floatValue();
+                    float dayLow = quote.getDayLow().floatValue();
+                    float yearHigh = quote.getYearHigh().floatValue();
+                    float yearLow = quote.getYearLow().floatValue();
 
+                    StockStats stats = stock.getStats();
+                    Timber.d("QuoteSyncJob:getQuotes: stock stats is %s", stats);
+                    Timber.d("QuoteSyncJob:getQuotes: stock eps is %s", stats.getEps());
+                    Timber.d("QuoteSyncJob:getQuotes: stock roe is %s", stats.getROE());
 
-                float dayHigh = quote.getDayHigh().floatValue();
-                float dayLow = quote.getDayLow().floatValue();
-                float yearHigh = quote.getYearHigh().floatValue();
-                float yearLow = quote.getYearLow().floatValue();
+                    //For symbols that has no EPS and ROE, pass 0. i.e SMD
+                    float eps = 0;
+                    float roe = 0;
+                    if(stats.getEps()!= null){
+                        eps = stats.getEps().floatValue();
+                    }
+                    if(stats.getROE()!= null){
+                        roe = stats.getROE().floatValue();
+                    }
 
-                StockStats stats = stock.getStats();
-                float eps = stats.getEps().floatValue();
-                float roe = stats.getROE().floatValue();
+                    // WARNING! Don't request historical data for a stock that doesn't exist!
+                    // The request will hang forever X_x
+                    List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
 
-                Timber.d("QuoteSyncJob:getQuotes: %s, %s, %s, %s, %s, %s",
-                        dayHigh, dayLow, yearHigh, yearLow, eps, roe);
+                    StringBuilder historyDateBuilder = new StringBuilder();
 
+                    for (HistoricalQuote it : history) {
+                        historyDateBuilder.append(DateFormat.format("yyyy/MM/dd", it.getDate()));
+                        historyDateBuilder.append("\n");
+                    }
 
-                // WARNING! Don't request historical data for a stock that doesn't exist!
-                // The request will hang forever X_x
-                List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
+                    StringBuilder historyClosingPriceBuilder = new StringBuilder();
+                    for (HistoricalQuote it : history) {
+                        historyClosingPriceBuilder.append(dollarFormat.format(it.getClose().setScale(1, BigDecimal.ROUND_HALF_UP)));
+                        historyClosingPriceBuilder.append("\n");
+                    }
 
-                StringBuilder historyBuilder = new StringBuilder();
+                    ContentValues quoteCV = new ContentValues();
+                    quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);
+                    quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
+                    quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
+                    quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
+                    quoteCV.put(Contract.Quote.COLUMN_DAY_HIGH, dayHigh);
+                    quoteCV.put(Contract.Quote.COLUMN_DAY_LOW, dayLow);
+                    quoteCV.put(Contract.Quote.COLUMN_YEAR_HIGH, yearHigh);
+                    quoteCV.put(Contract.Quote.COLUMN_YEAR_LOW, yearLow);
+                    quoteCV.put(Contract.Quote.COLUMN_EPS, eps);
+                    quoteCV.put(Contract.Quote.COLUMN_ROE, roe);
 
-                //Retrieve date and closing price
-                for (HistoricalQuote it : history) {
-                    historyBuilder.append(it.getDate().getTimeInMillis());
-                    historyBuilder.append(", ");
-                    historyBuilder.append(it.getClose());
-                    historyBuilder.append("\n");
+                    quoteCV.put(Contract.Quote.COLUMN_HISTORY_DATE, historyDateBuilder.toString());
+                    quoteCV.put(Contract.Quote.COLUMN_HISTORY_CLOSING_PRICE, historyClosingPriceBuilder.toString());
+                    contentValuesArrayList.add(quoteCV);
                 }
-
-                ContentValues quoteCV = new ContentValues();
-                quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);
-                quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
-                quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
-                quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
-                quoteCV.put(Contract.Quote.COLUMN_DAY_HIGH, dayHigh);
-                quoteCV.put(Contract.Quote.COLUMN_DAY_LOW, dayLow);
-                quoteCV.put(Contract.Quote.COLUMN_YEAR_HIGH, yearHigh);
-                quoteCV.put(Contract.Quote.COLUMN_YEAR_LOW, yearLow);
-                quoteCV.put(Contract.Quote.COLUMN_EPS, eps);
-                quoteCV.put(Contract.Quote.COLUMN_ROE, roe);
-                Timber.d("History data of %s is %s", symbol, historyBuilder.toString());
-
-                quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
-                contentValuesArrayList.add(quoteCV);
             }
 
             //Insert stock data
@@ -147,6 +171,7 @@ public final class QuoteSyncJob {
         } catch (IOException exception) {
             Timber.e(exception, "Error fetching stock quotes");
         }
+        return invalidSymbol;
     }
 
     /**
@@ -183,11 +208,7 @@ public final class QuoteSyncJob {
     public static synchronized void syncImmediately(Context context) {
 
         //If network is ok, startService
-        //todo:use utility method
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
+        if (Utility.networkUp(context)) {
             Intent nowIntent = new Intent(context, QuoteIntentService.class);
             context.startService(nowIntent);
         } else {
