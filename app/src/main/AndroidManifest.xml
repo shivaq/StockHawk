@@ -61,7 +61,7 @@
                 android:resource="@xml/widget_metadata"/>
         </receiver>
         <service
-            android:name=".widget.StockWiegetRemoteViewService"
+            android:name=".widget.StockWidgetRemoteViewService"
             android:enabled="@bool/widget_detail_enabled"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>

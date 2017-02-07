@@ -1,8 +1,6 @@
 package com.yasuaki.stockhawk.widget;
 
-/**
- * Created by Yasuaki on 2017/02/08.
- */
+import android.appwidget.AppWidgetProvider;
 
-public class StockWidgetProvider {
+public class StockWidgetProvider extends AppWidgetProvider {
 }
