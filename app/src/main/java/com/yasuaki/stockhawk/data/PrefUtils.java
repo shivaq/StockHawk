@@ -1,10 +1,10 @@
-package com.udacity.stockhawk.data;
+package com.yasuaki.stockhawk.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.udacity.stockhawk.R;
+import com.yasuaki.stockhawk.R;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -18,23 +18,22 @@ public final class PrefUtils {
     public static Set<String> getStocks(Context context) {
         String stocksKey = context.getString(R.string.pref_stocks_key);
         String initializedKey = context.getString(R.string.pref_stocks_initialized_key);
-        String[] defaultStocksList = context.getResources().getStringArray(R.array.default_stocks);
-
-        HashSet<String> defaultStocks = new HashSet<>(Arrays.asList(defaultStocksList));
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
 
         boolean initialized = prefs.getBoolean(initializedKey, false);
 
         if (!initialized) {
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean(initializedKey, true);
+
+            String[] defaultStocksList = context.getResources().getStringArray(R.array.default_stocks);
+            HashSet<String> defaultStocks = new HashSet<>(Arrays.asList(defaultStocksList));
             editor.putStringSet(stocksKey, defaultStocks);
+
+            editor.putBoolean(initializedKey, true);
             editor.apply();
             return defaultStocks;
         }
         return prefs.getStringSet(stocksKey, new HashSet<String>());
-
     }
 
     private static void editStockPref(Context context, String symbol, Boolean add) {
@@ -84,7 +83,6 @@ public final class PrefUtils {
         } else {
             editor.putString(key, absoluteKey);
         }
-
         editor.apply();
     }
 

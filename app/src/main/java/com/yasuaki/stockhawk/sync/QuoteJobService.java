@@ -1,4 +1,4 @@
-package com.udacity.stockhawk.sync;
+package com.yasuaki.stockhawk.sync;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
@@ -9,6 +9,7 @@ import timber.log.Timber;
 public class QuoteJobService extends JobService {
 
 
+    //Start background thread with QuoteIntentService
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Timber.d("Intent handled");

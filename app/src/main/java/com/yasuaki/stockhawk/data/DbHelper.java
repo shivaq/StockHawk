@@ -1,17 +1,17 @@
-package com.udacity.stockhawk.data;
+package com.yasuaki.stockhawk.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.udacity.stockhawk.data.Contract.Quote;
+import com.yasuaki.stockhawk.data.Contract.Quote;
 
 
 class DbHelper extends SQLiteOpenHelper {
 
 
     private static final String NAME = "StockHawk.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 3;
 
 
     DbHelper(Context context) {
@@ -26,7 +26,14 @@ class DbHelper extends SQLiteOpenHelper {
                 + Quote.COLUMN_PRICE + " REAL NOT NULL, "
                 + Quote.COLUMN_ABSOLUTE_CHANGE + " REAL NOT NULL, "
                 + Quote.COLUMN_PERCENTAGE_CHANGE + " REAL NOT NULL, "
-                + Quote.COLUMN_HISTORY + " TEXT NOT NULL, "
+                + Quote.COLUMN_HISTORY_DATE + " TEXT NOT NULL, "
+                + Quote.COLUMN_HISTORY_CLOSING_PRICE + " TEXT NOT NULL, "
+                + Quote.COLUMN_DAY_HIGH + " REAL NOT NULL, "
+                + Quote.COLUMN_DAY_LOW + " REAL NOT NULL, "
+                + Quote.COLUMN_YEAR_HIGH + " REAL NOT NULL, "
+                + Quote.COLUMN_YEAR_LOW + " REAL NOT NULL, "
+                + Quote.COLUMN_EPS + " REAL NOT NULL, "
+                + Quote.COLUMN_ROE + " REAL NOT NULL, "
                 + "UNIQUE (" + Quote.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         db.execSQL(builder);
