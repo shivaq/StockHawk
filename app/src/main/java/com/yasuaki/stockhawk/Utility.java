@@ -1,12 +1,15 @@
 package com.yasuaki.stockhawk;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+
+import com.yasuaki.stockhawk.sync.QuoteSyncJob;
 
 public class Utility {
 
@@ -41,5 +44,15 @@ public class Utility {
                 (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
+    }
+
+    //Send broadcast to specific broadcastReceiver
+    public static void updateMyWidget(Context context){
+
+        Intent updateWidgetIntent = new Intent();
+        updateWidgetIntent.setAction(QuoteSyncJob.ACTION_DATA_UPDATED);
+        updateWidgetIntent.setPackage(context.getPackageName());
+
+        context.sendBroadcast(updateWidgetIntent);
     }
 }

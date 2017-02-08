@@ -15,6 +15,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import timber.log.Timber;
+
+//RemoteViewsService
+// →a remote collection view (ListView, GridView, etc) にデータを配置するためのService
 public class StockWidgetRemoteViewService extends RemoteViewsService {
 
     private static final String[] STOCK_COLUMNS = {
@@ -25,24 +29,29 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
             Contract.Quote.COLUMN_PERCENTAGE_CHANGE
     };
 
+    //a remote collection view (ListView, GridView, etc) と
+    // それに反映させるdataとのAdapterのためのインターフェイス
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        Timber.d("StockWidgetRemoteViewService:onGetViewFactory: ");
         return new RemoteViewsFactory() {
-            private Cursor data = null;
+            private Cursor cursor = null;
 
             @Override
             public void onCreate() {
+                Timber.d("StockWidgetRemoteViewService:onCreate: ");
             }
 
             @Override
             public void onDataSetChanged() {
-                if (data != null) {
-                    data.close();
+                Timber.d("StockWidgetRemoteViewService:onDataSetChanged: ");
+                if (cursor != null) {
+                    cursor.close();
                 }
                 //Temporarily clear IPC identity
                 final long identityToken = Binder.clearCallingIdentity();
 
-                data = getContentResolver().query(
+                cursor = getContentResolver().query(
                         Contract.Quote.URI,
                         STOCK_COLUMNS,
                         null,
@@ -54,44 +63,51 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
 
             @Override
             public void onDestroy() {
-                if (data != null) {
-                    data.close();
-                    data = null;
+                Timber.d("StockWidgetRemoteViewService:onDestroy: ");
+                if (cursor != null) {
+                    cursor.close();
+                    cursor = null;
+                    Timber.d("StockWidgetRemoteViewService:onDestroy: cursor is closed");
                 }
             }
 
             @Override
             public int getCount() {
-                return data == null ? 0 : data.getCount();
+                Timber.d("StockWidgetRemoteViewService:getCount: ");
+                return cursor == null ? 0 : cursor.getCount();
             }
 
+
+            //cursorを、該当ポジションに移動して、そこのアイテムにデータを紐付けていく
             @Override
             public RemoteViews getViewAt(int position) {
 
+                Timber.d("StockWidgetRemoteViewService:getViewAt %s: ", position);
                 //Check validation
                 if (position == AdapterView.INVALID_POSITION ||
-                        data == null || !data.moveToPosition(position)) {
+                        cursor == null || !cursor.moveToPosition(position)) {
                     return null;
                 }
 
-                RemoteViews views = new RemoteViews(getPackageName(),
+                RemoteViews remoteViews = new RemoteViews(getPackageName(),
                         R.layout.widget_list_item);
 
                 DecimalFormat dollarFormat =
                         (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-                String symbol = data.getString(Contract.Quote.POSITION_SYMBOL);
-                String price = dollarFormat.format(data.getFloat(Contract.Quote.POSITION_PRICE));
-                float rawAbsoluteChange = data.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
+                String symbol = cursor.getString(Contract.Quote.POSITION_SYMBOL);
+                String price = dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE));
+                float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
+                Timber.d("StockWidgetRemoteViewService:getViewAt: Symbol is %s, price is %s and rawAbsoluteChange is %s", symbol, price, rawAbsoluteChange);
 
-                views.setTextViewText(R.id.symbol_widget, symbol);
-                views.setTextViewText(R.id.price_widget, price);
-                views.setTextViewText(R.id.change_widget, Float.toString(rawAbsoluteChange));
+                remoteViews.setTextViewText(R.id.symbol_widget, symbol);
+                remoteViews.setTextViewText(R.id.price_widget, price);
+                remoteViews.setTextViewText(R.id.change_widget, Float.toString(rawAbsoluteChange));
 
                 if (rawAbsoluteChange > 0) {
-                    views.setImageViewResource(R.id.change_widget,
+                    remoteViews.setImageViewResource(R.id.change_widget,
                             R.drawable.percent_change_pill_green);
                 } else {
-                    views.setImageViewResource(R.id.change_widget,
+                    remoteViews.setImageViewResource(R.id.change_widget,
                             R.drawable.percent_change_pill_red);
                 }
 
@@ -99,32 +115,39 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                 final Intent fillInIntent = new Intent();
                 Uri stockUri = Contract.Quote.makeUriForStock(symbol);
                 fillInIntent.setData(stockUri);
-                views.setOnClickFillInIntent(R.id.list_item_widget, fillInIntent);
-                return views;
+                remoteViews.setOnClickFillInIntent(R.id.list_item_widget, fillInIntent);
+
+                Timber.d("StockWidgetRemoteViewService:getViewAt: before remoteViews");
+                return remoteViews;
             }
 
 
             @Override
             public RemoteViews getLoadingView() {
-                return new RemoteViews(getPackageName(), R.layout.widget_list_item);
+                Timber.d("StockWidgetRemoteViewService:getLoadingView: ");
+                return null;
             }
 
             @Override
             public int getViewTypeCount() {
+                Timber.d("StockWidgetRemoteViewService:getViewTypeCount: ");
                 return 1;
             }
 
             @Override
             public long getItemId(int position) {
-                if (data.moveToPosition(position)) {
-                    return data.getLong(Contract.Quote.POSITION_ID);
+                if (cursor.moveToPosition(position)) {
+                    Timber.d("StockWidgetRemoteViewService:getItemId: position is %s", position);
+                    Timber.d("StockWidgetRemoteViewService:getItemId: position id is %s", Contract.Quote.POSITION_ID);
+                    return cursor.getLong(Contract.Quote.POSITION_ID);
                 }
                 return position;
             }
 
             @Override
             public boolean hasStableIds() {
-                return true;
+                Timber.d("StockWidgetRemoteViewService:hasStableIds: ");
+                return false;
             }
         };
     }
