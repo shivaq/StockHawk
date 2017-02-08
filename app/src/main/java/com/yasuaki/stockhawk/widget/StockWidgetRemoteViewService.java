@@ -82,7 +82,6 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
             @Override
             public RemoteViews getViewAt(int position) {
 
-                Timber.d("StockWidgetRemoteViewService:getViewAt %s: ", position);
                 //Check validation
                 if (position == AdapterView.INVALID_POSITION ||
                         cursor == null || !cursor.moveToPosition(position)) {
@@ -117,7 +116,6 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                 fillInIntent.setData(stockUri);
                 remoteViews.setOnClickFillInIntent(R.id.list_item_widget, fillInIntent);
 
-                Timber.d("StockWidgetRemoteViewService:getViewAt: before remoteViews");
                 return remoteViews;
             }
 
@@ -125,7 +123,8 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
             @Override
             public RemoteViews getLoadingView() {
                 Timber.d("StockWidgetRemoteViewService:getLoadingView: ");
-                return null;
+//                return null;
+                return new RemoteViews(getPackageName(), R.layout.widget_list_item);
             }
 
             @Override
@@ -138,7 +137,6 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
             public long getItemId(int position) {
                 if (cursor.moveToPosition(position)) {
                     Timber.d("StockWidgetRemoteViewService:getItemId: position is %s", position);
-                    Timber.d("StockWidgetRemoteViewService:getItemId: position id is %s", Contract.Quote.POSITION_ID);
                     return cursor.getLong(Contract.Quote.POSITION_ID);
                 }
                 return position;
@@ -147,7 +145,7 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
             @Override
             public boolean hasStableIds() {
                 Timber.d("StockWidgetRemoteViewService:hasStableIds: ");
-                return false;
+                return true;
             }
         };
     }

@@ -24,14 +24,13 @@ public class StockWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Timber.d("StockWidgetProvider:onReceive: ");
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
         //AppWidgetProvider のサブクラス名を渡して、対象Widget と紐付いたIDを取得
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                 new ComponentName(context, getClass()));
-
+        Timber.d("StockWidgetProvider:onReceive: appWidgetIds[0] is %s", appWidgetIds[0]);
         //onUpdate をコール
         this.onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -41,12 +40,10 @@ public class StockWidgetProvider extends AppWidgetProvider {
 
         //パラメータで受け取ったIDの Widget たちに処理をしていく
         for (int appWidgetId : appWidgetIds) {
-            Timber.d("StockWidgetProvider:onUpdate: ");
 
 
             Intent intentService = new Intent(context, StockWidgetRemoteViewService.class);
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_stock_list);
-
             //AdapterView のIDと、そのAdapterView にdataを紐付けてくれるService のIntent とを渡す
             //※AdapterView のサブクラス →ListView, GridView, Spinner and Gallery
             remoteViews.setRemoteAdapter(R.id.widget_list_view, intentService);
@@ -64,17 +61,8 @@ public class StockWidgetProvider extends AppWidgetProvider {
 
             remoteViews.setPendingIntentTemplate(R.id.widget_list_view, clickPendingIntentTemplate);
             remoteViews.setEmptyView(R.id.widget_list_view, R.id.text_error_widget);
-
-            Timber.d("StockWidgetProvider:onUpdate: after setRemoteAdapter");
+            Timber.d("StockWidgetProvider:onUpdate: appWidgetId is %s", appWidgetId);
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
-    }
-
-
-    private void setRemoteAdapter(Context context, final RemoteViews remoteViews) {
-        Timber.d("StockWidgetProvider:setRemoteAdapter: ");
-
-        remoteViews.setRemoteAdapter(R.id.widget_list_view,
-                new Intent(context, StockWidgetRemoteViewService.class));
     }
 }
