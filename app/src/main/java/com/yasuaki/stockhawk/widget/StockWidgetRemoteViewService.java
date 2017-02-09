@@ -103,10 +103,12 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                 remoteViews.setTextViewText(R.id.change_widget, Float.toString(rawAbsoluteChange));
 
                 if (rawAbsoluteChange > 0) {
-                    remoteViews.setImageViewResource(R.id.change_widget,
+                    Timber.d("StockWidgetRemoteViewService:getViewAt: rawAbsoluteChange is green");
+                    remoteViews.setInt(R.id.change_widget, "setBackgroundResource",
                             R.drawable.percent_change_pill_green);
                 } else {
-                    remoteViews.setImageViewResource(R.id.change_widget,
+                    Timber.d("StockWidgetRemoteViewService:getViewAt: rawAbsoluteChange is red");
+                    remoteViews.setInt(R.id.change_widget, "setBackgroundResource",
                             R.drawable.percent_change_pill_red);
                 }
 
