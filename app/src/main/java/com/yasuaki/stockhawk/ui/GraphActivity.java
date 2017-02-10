@@ -24,10 +24,6 @@ public class GraphActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
-
-
-
         GraphFragment graphFragment =
                 (GraphFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.graph_fragment_container);
