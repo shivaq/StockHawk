@@ -50,8 +50,6 @@ public final class QuoteSyncJob {
     /**
      * Get quotes with sharedPreferenced symbol from yahoo finance API.
      * This is called from QuoteIntentService in background thread
-     *
-     * @param context
      */
     static String getQuotes(Context context) {
 
@@ -201,8 +199,6 @@ public final class QuoteSyncJob {
 
     /**
      * If network is ok, startService. If network is not ok, try one time job.
-     *
-     * @param context
      */
     public static synchronized void syncImmediately(Context context) {
 

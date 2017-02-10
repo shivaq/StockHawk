@@ -3,26 +3,26 @@
 
     <string name="pref_stocks_initialized_key" translatable="false">initialized</string>
 
-    <string name="pref_stocks_key">stocks</string>
+    <string name="pref_stocks_key" translatable="false">stocks</string>
 
 
-    <string name="pref_display_mode_key">displayMode</string>
-    <string name="pref_display_mode_default">@string/pref_display_mode_percentage_key</string>
+    <string name="pref_display_mode_key" translatable="false">displayMode</string>
+    <string name="pref_display_mode_default" translatable="false">@string/pref_display_mode_percentage_key</string>
 
-    <string name="pref_display_mode_absolute_key">absolute</string>
-    <string name="pref_display_mode_percentage_key">percentage</string>
+    <string name="pref_display_mode_absolute_key" translatable="false">absolute</string>
+    <string name="pref_display_mode_percentage_key" translatable="false">percentage</string>
 
-    <string name="default_stocks_yahoo">YHOO</string>
-    <string name="default_stocks_apple">AAPL</string>
-    <string name="default_stocks_microsoft">MSFT</string>
-    <string name="default_stocks_facebook">FB</string>
-    <string name="default_stocks_AMD">AMD</string>
-    <string name="default_stocks_PIP">PIP</string>
-    <string name="default_stocks_BAC">BAC</string>
-    <string name="default_stocks_DRYS">DRYS</string>
-    <string name="default_stocks_GM">GM</string>
-    <string name="default_stocks_RGSE">RGSE</string>
-    <string name="default_stocks_XGTIW">XGTIW</string>
+    <string name="default_stocks_yahoo" translatable="false">YHOO</string>
+    <string name="default_stocks_apple" translatable="false">AAPL</string>
+    <string name="default_stocks_microsoft" translatable="false">MSFT</string>
+    <string name="default_stocks_facebook" translatable="false">FB</string>
+    <string name="default_stocks_AMD" translatable="false">AMD</string>
+    <string name="default_stocks_PIP" translatable="false">PIP</string>
+    <string name="default_stocks_BAC" translatable="false">BAC</string>
+    <string name="default_stocks_DRYS" translatable="false">DRYS</string>
+    <string name="default_stocks_GM" translatable="false">GM</string>
+    <string name="default_stocks_RGSE" translatable="false">RGSE</string>
+    <string name="default_stocks_XGTIW" translatable="false">XGTIW</string>
 
 
     <string name="action_change_units">@string/pref_display_mode_key</string>
@@ -44,4 +44,17 @@
     <string name="error_invalid_request">No stock information available. \n\nThe server is not returning valid data. \n\nPlease check for an updated version of application.</string>
     <string name="error_invalid_symbol_request">No stock information available. The request symbol doesn\'t exist.</string>
     <string name="title_widget">Stock Now</string>
+
+    <!-- Graph Label-->
+    <string name="text_label_graph_one_day">1day</string>
+    <string name="text_label_graph_five_days">5day</string>
+    <string name="text_label_graph_one_month">1month</string>
+    <string name="text_label_graph_six_months">6 months</string>
+    <string name="text_label_history_day">Date</string>
+    <string name="text_label_history_closing_price">Closing price</string>
+    <!-- Graph image description -->
+    <string name="graph_description_for_one_day">Stock price change graph for one day</string>
+    <string name="graph_description_for_five_daysy">Stock price change graph for five day</string>
+    <string name="graph_description_for_one_month">Stock price change graph for one month</string>
+    <string name="graph_description_for_six_months">Stock price change graph for six months</string>
 </resources>

@@ -25,8 +25,8 @@
     <style name="StockDetailInfo">
         <item name="android:background">@android:color/white</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingStart">@dimen/margin_middle</item>
+        <item name="android:paddingEnd">@dimen/margin_middle</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:visibility">visible</item>
@@ -34,18 +34,19 @@
 
     <!-- GraphLable-->
     <style name="GraphLabel">
-        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_middle</item>
         <item name="android:background">@android:color/white</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingStart">@dimen/margin_middle</item>
+        <item name="android:paddingEnd">@dimen/margin_middle</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
         <item name="android:visibility">visible</item>
     </style>
 
     <style name="Graph">
         <item name="android:adjustViewBounds">true</item>
-        <item name="android:visibility">gone</item>
+        <item name="android:visibility">visible</item>
     </style>
 
     <style name="HistoryDataLabel">
