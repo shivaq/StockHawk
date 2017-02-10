@@ -2,7 +2,6 @@ package com.yasuaki.stockhawk.widget;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Binder;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
@@ -96,10 +95,6 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                         (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
                 DecimalFormat dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
                 dollarFormatWithPlus.setPositivePrefix("+$");
-
-
-
-
                 String symbol = cursor.getString(Contract.Quote.POSITION_SYMBOL);
                 String price = dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE));
                 float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
@@ -120,12 +115,8 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                             R.drawable.percent_change_pill_red);
                 }
 
-                //Create cost effective intent
                 final Intent fillInIntent = new Intent();
-
-                //Get uri and set on Intent
-                Uri stockUri = Contract.Quote.makeUriForStock(symbol);
-                fillInIntent.setData(stockUri);
+                fillInIntent.putExtra(Intent.EXTRA_TEXT, symbol);
 
                 remoteViews.setOnClickFillInIntent(R.id.list_item_widget, fillInIntent);
 
