@@ -75,7 +75,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.main_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
         mAdapter = new StockAdapter(getActivity(), this);

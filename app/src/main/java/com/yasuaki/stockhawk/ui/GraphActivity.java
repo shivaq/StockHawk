@@ -16,7 +16,7 @@ public class GraphActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_graph);
+        setContentView(R.layout.graph_activity);
 
 
         ActionBar actionBar = this.getSupportActionBar();
