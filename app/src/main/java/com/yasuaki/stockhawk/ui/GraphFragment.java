@@ -48,7 +48,7 @@ public class GraphFragment extends Fragment implements LoaderManager.LoaderCallb
     ImageView fiveDayGraph;
     @BindView(R.id.image_one_month_graph)
     ImageView oneMonthGraph;
-    @BindView(R.id.image_five_six_month)
+    @BindView(R.id.image_five_six_months)
     ImageView sixMonthGraph;
 
 

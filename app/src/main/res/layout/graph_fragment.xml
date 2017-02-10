@@ -34,10 +34,10 @@
         <!-- Stock Detail Info -->
         <LinearLayout
             android:layout_width="wrap_content"
-            android:background="@android:color/white"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_middle"
+            android:background="@android:color/white"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -120,11 +120,12 @@
                 style="@style/GraphLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1day"/>
+                android:text="@string/text_label_graph_one_day"/>
 
             <ImageView
                 android:id="@+id/image_one_day_graph"
                 style="@style/Graph"
+                android:contentDescription="@string/graph_description_for_one_day"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/rectangle"
@@ -135,12 +136,13 @@
                 style="@style/GraphLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="5day"
+                android:text="@string/text_label_graph_five_days"
                 />
 
             <ImageView
                 android:id="@+id/image_five_day_graph"
                 style="@style/Graph"
+                android:contentDescription="@string/graph_description_for_five_daysy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:src="@drawable/rectangle"/>
@@ -150,10 +152,11 @@
                 style="@style/GraphLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1month"/>
+                android:text="@string/text_label_graph_one_month"/>
 
             <ImageView
                 android:id="@+id/image_one_month_graph"
+                android:contentDescription="@string/graph_description_for_one_month"
                 style="@style/Graph"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -164,11 +167,13 @@
                 style="@style/GraphLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:text="6month"/>
+                android:paddingEnd="@dimen/margin_middle"
+                android:paddingStart="@dimen/margin_middle"
+                android:text="@string/text_label_graph_six_months"/>
 
             <ImageView
-                android:id="@+id/image_five_six_month"
+                android:id="@+id/image_five_six_months"
+                android:contentDescription="@string/graph_description_for_six_months"
                 style="@style/Graph"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -176,13 +181,13 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:background="@android:color/white"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_middle"
+                android:background="@android:color/white"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
+                android:paddingEnd="@dimen/margin_middle"
+                android:paddingStart="@dimen/margin_middle"
                 >
 
 
@@ -192,23 +197,23 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/HistoryDataLabel"
                         android:id="@+id/text_label_history_date"
+                        style="@style/HistoryDataLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginLeft="8dp"
-                        android:text="Date"
-                        android:gravity="right"/>
+                        android:layout_marginEnd="@dimen/margin_large"
+                        android:layout_marginStart="@dimen/margin_middle"
+                        android:gravity="end"
+                        android:text="@string/text_label_history_day"/>
 
                     <TextView
-                        style="@style/HistoryDataLabel"
-
                         android:id="@+id/text_history_date"
+
+                        style="@style/HistoryDataLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:gravity="right"
+                        android:layout_marginEnd="@dimen/margin_large"
+                        android:gravity="end"
                         tools:text="2017/02/14"/>
                 </LinearLayout>
 
@@ -219,23 +224,23 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/HistoryDataLabel"
-
                         android:id="@+id/text_label_history_price"
+
+                        style="@style/HistoryDataLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="16dp"
-                        android:gravity="left"
-                        android:text="Closing price"/>
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:gravity="start"
+                        android:text="@string/text_label_history_closing_price"/>
 
                     <TextView
-                        style="@style/HistoryDataLabel"
-
                         android:id="@+id/text_history_price"
+
+                        style="@style/HistoryDataLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:gravity="left"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:gravity="end"
                         tools:text="$50,000"/>
                 </LinearLayout>
             </LinearLayout>

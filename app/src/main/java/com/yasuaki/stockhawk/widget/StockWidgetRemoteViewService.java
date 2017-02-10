@@ -33,18 +33,15 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
     // それに反映させるdataとのAdapterのためのインターフェイス
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        Timber.d("StockWidgetRemoteViewService:onGetViewFactory: ");
         return new RemoteViewsFactory() {
             private Cursor cursor = null;
 
             @Override
             public void onCreate() {
-                Timber.d("StockWidgetRemoteViewService:onCreate: ");
             }
 
             @Override
             public void onDataSetChanged() {
-                Timber.d("StockWidgetRemoteViewService:onDataSetChanged: ");
                 if (cursor != null) {
                     cursor.close();
                 }
@@ -63,22 +60,18 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
 
             @Override
             public void onDestroy() {
-                Timber.d("StockWidgetRemoteViewService:onDestroy: ");
                 if (cursor != null) {
                     cursor.close();
                     cursor = null;
-                    Timber.d("StockWidgetRemoteViewService:onDestroy: cursor is closed");
                 }
             }
 
             @Override
             public int getCount() {
-                Timber.d("StockWidgetRemoteViewService:getCount: ");
                 return cursor == null ? 0 : cursor.getCount();
             }
 
 
-            //cursorを、該当ポジションに移動して、そこのアイテムにデータを紐付けていく
             @Override
             public RemoteViews getViewAt(int position) {
 
@@ -99,18 +92,15 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                 String price = dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE));
                 float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
                 String change = dollarFormatWithPlus.format(rawAbsoluteChange);
-                Timber.d("StockWidgetRemoteViewService:getViewAt: Symbol is %s, price is %s and rawAbsoluteChange is %s", symbol, price, rawAbsoluteChange);
 
                 remoteViews.setTextViewText(R.id.symbol_widget, symbol);
                 remoteViews.setTextViewText(R.id.price_widget, price);
                 remoteViews.setTextViewText(R.id.change_widget, change);
 
                 if (rawAbsoluteChange > 0) {
-                    Timber.d("StockWidgetRemoteViewService:getViewAt: rawAbsoluteChange is green");
                     remoteViews.setInt(R.id.change_widget, "setBackgroundResource",
                             R.drawable.percent_change_pill_green);
                 } else {
-                    Timber.d("StockWidgetRemoteViewService:getViewAt: rawAbsoluteChange is red");
                     remoteViews.setInt(R.id.change_widget, "setBackgroundResource",
                             R.drawable.percent_change_pill_red);
                 }
@@ -126,21 +116,18 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
 
             @Override
             public RemoteViews getLoadingView() {
-                Timber.d("StockWidgetRemoteViewService:getLoadingView: ");
 //                return null;
                 return new RemoteViews(getPackageName(), R.layout.widget_list_item);
             }
 
             @Override
             public int getViewTypeCount() {
-                Timber.d("StockWidgetRemoteViewService:getViewTypeCount: ");
                 return 1;
             }
 
             @Override
             public long getItemId(int position) {
                 if (cursor.moveToPosition(position)) {
-                    Timber.d("StockWidgetRemoteViewService:getItemId: position is %s", position);
                     return cursor.getLong(Contract.Quote.POSITION_ID);
                 }
                 return position;
@@ -148,7 +135,6 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
 
             @Override
             public boolean hasStableIds() {
-                Timber.d("StockWidgetRemoteViewService:hasStableIds: ");
                 return true;
             }
         };
