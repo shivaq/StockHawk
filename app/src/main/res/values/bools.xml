@@ -2,4 +2,5 @@
 <resources>
     <bool name="widget_detail_enabled">true</bool>
     <bool name="use_detail_activity">true</bool>
+    <bool name="use_two_pane_activity">false</bool>
 </resources>
