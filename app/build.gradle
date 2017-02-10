@@ -52,7 +52,7 @@ check {
 dependencies {
     final STETHO_VERSION = '1.4.2'
     final PICASSO_VERSION = '2.5.2'
-    final CONSTRAINT_LAYOUT_VERSION = '1.0.0-beta5'
+    final CONSTRAINT_LAYOUT_VERSION = '1.0.0-beta4'
 
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
