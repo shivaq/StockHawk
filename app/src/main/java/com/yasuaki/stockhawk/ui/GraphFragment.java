@@ -86,7 +86,7 @@ public class GraphFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_graph, container, false);
+        View rootView = inflater.inflate(R.layout.graph_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
         Intent intent = getActivity().getIntent();

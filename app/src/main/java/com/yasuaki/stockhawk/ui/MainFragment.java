@@ -75,7 +75,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.main_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
         mAdapter = new StockAdapter(getActivity(), this);
@@ -115,9 +115,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //レイアウトの状態を Parcelable にして保存
         mLayoutState = mLayoutManager.onSaveInstanceState();
-        //上記Parcelable を Bundle を使用して保存
         outState.putParcelable(LAYOUT_STATE_KEY, mLayoutState);
     }
 
@@ -170,10 +168,13 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Timber.d("Loader id is %s args is %s", id, args);
-        return new CursorLoader(getActivity(),
+        return new CursorLoader(
+                getActivity(),
                 Contract.Quote.URI,
                 Contract.Quote.QUOTE_COLUMNS.toArray(new String[]{}),
-                null, null, Contract.Quote.COLUMN_SYMBOL);
+                null,
+                null,
+                Contract.Quote.COLUMN_SYMBOL);
     }
 
     @Override

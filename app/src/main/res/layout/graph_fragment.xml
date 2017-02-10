@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_graph"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:id="@+id/stock_graph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Error view-->
+        <TextView
+            android:id="@+id/text_error_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:visibility="gone"
+            tools:text="error"/>
+
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <!-- Stock Detail Info -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:background="@android:color/white"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_day_low"
+                    style="@style/StockDetailInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Day-Low: 128.5"/>
+
+                <TextView
+                    android:id="@+id/text_day_high"
+                    style="@style/StockDetailInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Day-Low: 128.5"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_year_low"
+                    style="@style/StockDetailInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Day-Low: 128.5"/>
+
+                <TextView
+                    android:id="@+id/text_year_high"
+                    style="@style/StockDetailInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Day-Low: 128.5"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_eps"
+                    style="@style/StockDetailInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Day-Low: 128.5"
+                    />
+
+
+                <TextView
+                    android:id="@+id/text_roe"
+                    style="@style/StockDetailInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Day-Low: 128.5"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <!-- Graph -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/text_label_one_day"
+                style="@style/GraphLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1day"/>
+
+            <ImageView
+                android:id="@+id/image_one_day_graph"
+                style="@style/Graph"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/rectangle"
+                />
+
+            <TextView
+                android:id="@+id/text_label_five_day"
+                style="@style/GraphLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5day"
+                />
+
+            <ImageView
+                android:id="@+id/image_five_day_graph"
+                style="@style/Graph"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/rectangle"/>
+
+            <TextView
+                android:id="@+id/text_label_one_month"
+                style="@style/GraphLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1month"/>
+
+            <ImageView
+                android:id="@+id/image_one_month_graph"
+                style="@style/Graph"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/rectangle"/>
+
+            <TextView
+                android:id="@+id/text_label_six_month"
+                style="@style/GraphLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:text="6month"/>
+
+            <ImageView
+                android:id="@+id/image_five_six_month"
+                style="@style/Graph"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/rectangle"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:background="@android:color/white"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                >
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/HistoryDataLabel"
+                        android:id="@+id/text_label_history_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginLeft="8dp"
+                        android:text="Date"
+                        android:gravity="right"/>
+
+                    <TextView
+                        style="@style/HistoryDataLabel"
+
+                        android:id="@+id/text_history_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:gravity="right"
+                        tools:text="2017/02/14"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/HistoryDataLabel"
+
+                        android:id="@+id/text_label_history_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:gravity="left"
+                        android:text="Closing price"/>
+
+                    <TextView
+                        style="@style/HistoryDataLabel"
+
+                        android:id="@+id/text_history_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:gravity="left"
+                        tools:text="$50,000"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

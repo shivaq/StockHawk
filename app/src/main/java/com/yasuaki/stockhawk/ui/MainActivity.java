@@ -1,32 +1,35 @@
 package com.yasuaki.stockhawk.ui;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.yasuaki.stockhawk.R;
-import com.yasuaki.stockhawk.Utility;
 
-public class MainActivity extends AppCompatActivity  {
+import timber.log.Timber;
+
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
-        //Get reference of Fragment
-        MainFragment mainFragment =
-                (MainFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.main_fragment_container);
+        Uri contentUri = getIntent() != null ? getIntent().getData() : null;
 
-        //If fragment reference is null, Create and inflate new fragment instance
-        if (mainFragment == null) {
-            mainFragment = MainFragment.newInstance();
-            Utility.addFragmentToActivity(
-                    getSupportFragmentManager(),
-                    mainFragment,
-                    R.id.main_fragment_container);
+        Timber.d("MainActivity:onCreate: contentUri is %s", contentUri);
+
+
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.main_fragment_container,
+                                MainFragment.newInstance())
+                        .commit();
+            }
+
+        if(contentUri != null){
+
         }
-
     }
-
 }

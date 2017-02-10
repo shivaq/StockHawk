@@ -29,6 +29,7 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
             Contract.Quote.COLUMN_PERCENTAGE_CHANGE
     };
 
+
     //a remote collection view (ListView, GridView, etc) と
     // それに反映させるdataとのAdapterのためのインターフェイス
     @Override
@@ -56,7 +57,7 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
                         STOCK_COLUMNS,
                         null,
                         null,
-                        null);
+                        Contract.Quote.COLUMN_SYMBOL);
 
                 Binder.restoreCallingIdentity(identityToken);
             }
@@ -93,14 +94,21 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
 
                 DecimalFormat dollarFormat =
                         (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
+                DecimalFormat dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
+                dollarFormatWithPlus.setPositivePrefix("+$");
+
+
+
+
                 String symbol = cursor.getString(Contract.Quote.POSITION_SYMBOL);
                 String price = dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE));
                 float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
+                String change = dollarFormatWithPlus.format(rawAbsoluteChange);
                 Timber.d("StockWidgetRemoteViewService:getViewAt: Symbol is %s, price is %s and rawAbsoluteChange is %s", symbol, price, rawAbsoluteChange);
 
                 remoteViews.setTextViewText(R.id.symbol_widget, symbol);
                 remoteViews.setTextViewText(R.id.price_widget, price);
-                remoteViews.setTextViewText(R.id.change_widget, Float.toString(rawAbsoluteChange));
+                remoteViews.setTextViewText(R.id.change_widget, change);
 
                 if (rawAbsoluteChange > 0) {
                     Timber.d("StockWidgetRemoteViewService:getViewAt: rawAbsoluteChange is green");
@@ -114,8 +122,11 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
 
                 //Create cost effective intent
                 final Intent fillInIntent = new Intent();
+
+                //Get uri and set on Intent
                 Uri stockUri = Contract.Quote.makeUriForStock(symbol);
                 fillInIntent.setData(stockUri);
+
                 remoteViews.setOnClickFillInIntent(R.id.list_item_widget, fillInIntent);
 
                 return remoteViews;
