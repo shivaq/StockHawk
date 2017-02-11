@@ -14,10 +14,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import timber.log.Timber;
-
 //RemoteViewsService
-// →a remote collection view (ListView, GridView, etc) にデータを配置するためのService
 public class StockWidgetRemoteViewService extends RemoteViewsService {
 
     private static final String[] STOCK_COLUMNS = {
@@ -29,8 +26,6 @@ public class StockWidgetRemoteViewService extends RemoteViewsService {
     };
 
 
-    //a remote collection view (ListView, GridView, etc) と
-    // それに反映させるdataとのAdapterのためのインターフェイス
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new RemoteViewsFactory() {

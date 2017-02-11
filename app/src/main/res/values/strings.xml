@@ -57,4 +57,6 @@
     <string name="graph_description_for_five_daysy">Stock price change graph for five day</string>
     <string name="graph_description_for_one_month">Stock price change graph for one month</string>
     <string name="graph_description_for_six_months">Stock price change graph for six months</string>
+    <string name="error_toast_the_symol">"The symbol "</string>
+    <string name="error_toast_doesnt_exist">" doesn't exist!"</string>
 </resources>

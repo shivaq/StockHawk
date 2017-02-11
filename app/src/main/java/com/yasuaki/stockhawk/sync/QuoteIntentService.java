@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.yasuaki.stockhawk.R;
+
 import timber.log.Timber;
 
 
@@ -34,7 +36,7 @@ public class QuoteIntentService extends IntentService {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(QuoteIntentService.this, "The symbol " + invalidSymbol + " doesn't exist!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(QuoteIntentService.this, getString(R.string.error_toast_the_symol) + invalidSymbol + getString(R.string.error_toast_doesnt_exist), Toast.LENGTH_LONG).show();
                 }
             });
         }
